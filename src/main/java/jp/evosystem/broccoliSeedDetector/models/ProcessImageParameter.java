@@ -35,11 +35,6 @@ public class ProcessImageParameter {
 	public int contourAreaMaxThreshold;
 
 	/**
-	 * ピクセル/cm.
-	 */
-	public int pixelPerCentimeter;
-
-	/**
 	 * デフォルトのパラメータを取得.
 	 *
 	 * @return
@@ -54,7 +49,6 @@ public class ProcessImageParameter {
 		parameter.cannyThreshold2 = Configurations.DEFAULT_CANNY_THRESHOLD_2;
 		parameter.contourAreaMinThreshold = Configurations.DEFAULT_CONTOUR_AREA_MIN_THRESHOLD;
 		parameter.contourAreaMaxThreshold = Configurations.DEFAULT_CONTOUR_AREA_MAX_THRESHOLD;
-		parameter.pixelPerCentimeter = Configurations.USE_PIXEL_PER_CENTIMETER;
 		return parameter;
 	}
 }

@@ -47,11 +47,6 @@ public class ExtendedCanvsFrame extends CanvasFrame {
 	public JSlider contourAreaMaxThresholdSlider;
 
 	/**
-	 * ピクセル/cm.
-	 */
-	public JSlider pixelPerCentimeterSlider;
-
-	/**
 	 * コンストラクタ.
 	 *
 	 * @param title
@@ -67,33 +62,33 @@ public class ExtendedCanvsFrame extends CanvasFrame {
 
 		// スライダーを作成
 		gaussianBlueSizeSlider = new JSlider(0, 100, Configurations.DEFAULT_GAUSSIAN_BLUR_SIZE);
-		gaussianBlueSizeSlider.setLabelTable(gaussianBlueSizeSlider.createStandardLabels(10));
+		gaussianBlueSizeSlider
+				.setLabelTable(gaussianBlueSizeSlider.createStandardLabels(gaussianBlueSizeSlider.getMaximum() / 10));
 		gaussianBlueSizeSlider.setPaintLabels(true);
 
 		// スライダーを作成
 		cannyThreshold1Slider = new JSlider(0, 255, Configurations.DEFAULT_CANNY_THRESHOLD_1);
-		cannyThreshold1Slider.setLabelTable(cannyThreshold1Slider.createStandardLabels(10));
+		cannyThreshold1Slider
+				.setLabelTable(cannyThreshold1Slider.createStandardLabels(cannyThreshold1Slider.getMaximum() / 10));
 		cannyThreshold1Slider.setPaintLabels(true);
 
 		// スライダーを作成
 		cannyThreshold2Slider = new JSlider(0, 255, Configurations.DEFAULT_CANNY_THRESHOLD_2);
-		cannyThreshold2Slider.setLabelTable(cannyThreshold2Slider.createStandardLabels(10));
+		cannyThreshold2Slider
+				.setLabelTable(cannyThreshold2Slider.createStandardLabels(cannyThreshold2Slider.getMaximum() / 10));
 		cannyThreshold2Slider.setPaintLabels(true);
 
 		// スライダーを作成
-		contourAreaMinThresholdSlider = new JSlider(0, 1000, Configurations.DEFAULT_CONTOUR_AREA_MIN_THRESHOLD);
-		contourAreaMinThresholdSlider.setLabelTable(contourAreaMinThresholdSlider.createStandardLabels(100));
+		contourAreaMinThresholdSlider = new JSlider(0, 50000, Configurations.DEFAULT_CONTOUR_AREA_MIN_THRESHOLD);
+		contourAreaMinThresholdSlider.setLabelTable(
+				contourAreaMinThresholdSlider.createStandardLabels(contourAreaMinThresholdSlider.getMaximum() / 10));
 		contourAreaMinThresholdSlider.setPaintLabels(true);
 
 		// スライダーを作成
-		contourAreaMaxThresholdSlider = new JSlider(0, 1000, Configurations.DEFAULT_CONTOUR_AREA_MAX_THRESHOLD);
-		contourAreaMaxThresholdSlider.setLabelTable(contourAreaMaxThresholdSlider.createStandardLabels(100));
+		contourAreaMaxThresholdSlider = new JSlider(0, 50000, Configurations.DEFAULT_CONTOUR_AREA_MAX_THRESHOLD);
+		contourAreaMaxThresholdSlider.setLabelTable(
+				contourAreaMaxThresholdSlider.createStandardLabels(contourAreaMaxThresholdSlider.getMaximum() / 10));
 		contourAreaMaxThresholdSlider.setPaintLabels(true);
-
-		// スライダーを作成
-		pixelPerCentimeterSlider = new JSlider(0, 100, Configurations.USE_PIXEL_PER_CENTIMETER);
-		pixelPerCentimeterSlider.setLabelTable(pixelPerCentimeterSlider.createStandardLabels(10));
-		pixelPerCentimeterSlider.setPaintLabels(true);
 
 		// コンポーネントを配置
 		Container contentPane = this.getContentPane();
@@ -147,15 +142,6 @@ public class ExtendedCanvsFrame extends CanvasFrame {
 		lineAxisPanel5.add(new JLabel("contourAreaMaxThreshold"));
 		lineAxisPanel5.add(contourAreaMaxThresholdSlider);
 
-		// 左から右へレイアウトするパネルを作成
-		JPanel lineAxisPanel6 = new JPanel();
-		lineAxisPanel6.setLayout(new BoxLayout(lineAxisPanel6, BoxLayout.LINE_AXIS));
-		pageAxisPanel.add(lineAxisPanel6);
-
-		// コンポーネントを追加
-		lineAxisPanel6.add(new JLabel("pixelPerCentimeter"));
-		lineAxisPanel6.add(pixelPerCentimeterSlider);
-
 		contentPane.add(pageAxisPanel, BorderLayout.NORTH);
 	}
 
@@ -175,7 +161,6 @@ public class ExtendedCanvsFrame extends CanvasFrame {
 		parameter.cannyThreshold2 = cannyThreshold2Slider.getValue();
 		parameter.contourAreaMinThreshold = contourAreaMinThresholdSlider.getValue();
 		parameter.contourAreaMaxThreshold = contourAreaMaxThresholdSlider.getValue();
-		parameter.pixelPerCentimeter = pixelPerCentimeterSlider.getValue();
 		return parameter;
 	}
 }
