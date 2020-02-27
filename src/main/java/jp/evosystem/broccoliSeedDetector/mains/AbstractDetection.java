@@ -1,7 +1,6 @@
 package jp.evosystem.broccoliSeedDetector.mains;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import org.bytedeco.javacpp.indexer.UByteIndexer;
 import org.bytedeco.opencv.global.opencv_core;
@@ -30,8 +29,11 @@ public abstract class AbstractDetection {
 	 *
 	 * @param targetImageMat
 	 * @param processImageParameter
+	 * @return NGが1件以上ある場合はfalse、そうでない場合はtrue
 	 */
-	protected static void processTargetImage(Mat targetImageMat, ProcessImageParameter processImageParameter) {
+	protected static boolean processTargetImage(Mat targetImageMat, ProcessImageParameter processImageParameter) {
+		boolean hasNg = false;
+
 		// 元画像のコピーを作成
 		Mat targetImageMatClone = targetImageMat.clone();
 
@@ -89,7 +91,6 @@ public abstract class AbstractDetection {
 		opencv_imgproc.findContours(targetImageMatErode, targetImageContours, targetImageHierarchy,
 				opencv_imgproc.RETR_EXTERNAL,
 				opencv_imgproc.CHAIN_APPROX_SIMPLE);
-		System.out.println("検出した輪郭数:" + targetImageContours.size());
 
 		// 全ての輪郭を描画
 		if (Configurations.DRAW_ALL_CONTOURS) {
@@ -144,6 +145,7 @@ public abstract class AbstractDetection {
 							opencv_imgproc.FONT_HERSHEY_SIMPLEX, 0.5,
 							Scalar.BLACK);
 				} else {
+					hasNg = true;
 					opencv_imgproc.rectangle(targetImageMat, tl, new Point(tl.x() + 20, tl.y() + 20), Scalar.RED, -1,
 							opencv_imgproc.LINE_4, 0);
 					opencv_imgproc.putText(targetImageMat, "NG", new Point(tl.x(), tl.y() + 15),
@@ -152,6 +154,7 @@ public abstract class AbstractDetection {
 				}
 			}
 		}
+		return !hasNg;
 	}
 
 	/**
@@ -165,9 +168,44 @@ public abstract class AbstractDetection {
 		// 矩形内の画像を抽出
 		Mat subTargetImageMat = targetImageMat.apply(boundingRect);
 
-		// TODO
+		// グレースケール画像を作成
+		Mat targetImageMatGray = new Mat();
+		opencv_imgproc.cvtColor(subTargetImageMat, targetImageMatGray, opencv_imgproc.COLOR_BGR2GRAY);
 
-		// FIXME
-		return 1 < new Random().nextInt(100);
+		// ブラー画像を作成
+		Mat targetImageMatBlur = new Mat();
+		opencv_imgproc.GaussianBlur(targetImageMatGray, targetImageMatBlur,
+				new Size(Configurations.DEFAULT_GAUSSIAN_BLUR_SIZE, Configurations.DEFAULT_GAUSSIAN_BLUR_SIZE), 0);
+
+		// エッジ抽出
+		Mat targetImageMatCanny = new Mat();
+		opencv_imgproc.Canny(targetImageMatBlur, targetImageMatCanny, Configurations.DEFAULT_CANNY_THRESHOLD_1,
+				Configurations.DEFAULT_CANNY_THRESHOLD_2);
+		Mat targetImageMatDilate = new Mat();
+		opencv_imgproc.dilate(targetImageMatCanny, targetImageMatDilate, new Mat());
+		Mat targetImageMatErode = new Mat();
+		opencv_imgproc.erode(targetImageMatDilate, targetImageMatErode, new Mat());
+
+		// 輪郭を検出
+		MatVector targetImageContours = new MatVector();
+		Mat targetImageHierarchy = new Mat();
+		opencv_imgproc.findContours(targetImageMatErode, targetImageContours, targetImageHierarchy,
+				opencv_imgproc.RETR_EXTERNAL,
+				opencv_imgproc.CHAIN_APPROX_SIMPLE);
+
+		// 全ての輪郭に対して実行
+		for (Mat contour : targetImageContours.get()) {
+			// 回転を考慮しない外接矩形を取得
+			Rect subBoundingRect = opencv_imgproc.boundingRect(contour);
+
+			// 外接矩形の面積を計算
+			double boundingReactArea = subBoundingRect.width() * subBoundingRect.height();
+			if (100 < boundingReactArea
+					&& boundingReactArea < 1000) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

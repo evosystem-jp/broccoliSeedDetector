@@ -13,6 +13,11 @@ public interface Configurations {
 	boolean ENABLE_DEBUG_MODE = false;
 
 	/**
+	 * ビープ音を鳴らすまでの連続NGフレーム数.
+	 */
+	int BEEP_THRESHOLD_NG_COUNT = 30;
+
+	/**
 	 * ブラーのサイズのデフォルト値(奇数).
 	 */
 	int DEFAULT_GAUSSIAN_BLUR_SIZE = 25;
@@ -81,4 +86,9 @@ public interface Configurations {
 	 * 使用するWebカメラのデバイス番号.
 	 */
 	int TARGET_DEVICE_NUMBER = 0;
+
+	/**
+	 * 使用するIPカメラのURL.
+	 */
+	String TARGET_IP_CAMERA_URL = "http://61.214.197.204:1024/-wvhttp-01-/GetOneShot?image_size=640x480&frame_count=1000000000";
 }

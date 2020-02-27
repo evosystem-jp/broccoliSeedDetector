@@ -1,10 +1,12 @@
 package jp.evosystem.broccoliSeedDetector.mains;
 
 import java.awt.Toolkit;
+import java.util.concurrent.TimeUnit;
 
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.FrameRecorder;
+import org.bytedeco.javacv.IPCameraFrameGrabber;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.opencv_core.Mat;
 
@@ -12,11 +14,11 @@ import jp.evosystem.broccoliSeedDetector.components.ExtendedCanvsFrame;
 import jp.evosystem.broccoliSeedDetector.constants.Configurations;
 
 /**
- * Webカメラ画像から画像内の物体を検出.
+ * IPカメラ画像から画像内の物体を検出.
  *
  * @author evosystem
  */
-public class WebCameraDetection extends AbstractDetection {
+public class IpCameraDetection extends AbstractDetection {
 
 	/**
 	 * main.
@@ -25,12 +27,13 @@ public class WebCameraDetection extends AbstractDetection {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		// Webカメラから映像取得
-		try (FrameGrabber frameGrabber = FrameGrabber.createDefault(Configurations.TARGET_DEVICE_NUMBER)) {
+		// IPカメラから映像取得
+		try (FrameGrabber frameGrabber = new IPCameraFrameGrabber(Configurations.TARGET_IP_CAMERA_URL, 1, 1,
+				TimeUnit.MINUTES)) {
 			frameGrabber.start();
 
 			// レコーダーを作成
-			try (FrameRecorder recorder = FrameRecorder.createDefault("target/WebCameraDetection.mp4",
+			try (FrameRecorder recorder = FrameRecorder.createDefault("target/WebCameraDetection.avi",
 					frameGrabber.getImageWidth(),
 					frameGrabber.getImageHeight())) {
 				// 録画を開始

@@ -1,7 +1,9 @@
 package jp.evosystem.broccoliSeedDetector.mains;
 
+import java.awt.Toolkit;
 import java.io.File;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -55,6 +57,12 @@ public class VideoFileDetection extends AbstractDetection {
 				// 取得した映像データ
 				Mat grabbedImage;
 
+				// 連続NGのフレーム数
+				int ngCount = 0;
+
+				// StopWatch
+				StopWatch stopWatch = new StopWatch();
+
 				// 画面が表示中の間ループ
 				while (canvasFrame.isVisible() && (frameGrabber.getFrameNumber() < frameGrabber.getLengthInFrames())) {
 					try {
@@ -63,8 +71,20 @@ public class VideoFileDetection extends AbstractDetection {
 
 						// 動画のフレームが存在する場合のみ処理を実行
 						if (grabbedImage != null) {
+							stopWatch.reset();
+							stopWatch.start();
+
 							// 画像処理
-							processTargetImage(grabbedImage, canvasFrame.getCurrentParameter());
+							boolean hasNg = processTargetImage(grabbedImage, canvasFrame.getCurrentParameter());
+							if (hasNg) {
+								ngCount++;
+							} else {
+								ngCount = 0;
+							}
+							if (Configurations.BEEP_THRESHOLD_NG_COUNT < ngCount) {
+								// 警告音を鳴らす
+								Toolkit.getDefaultToolkit().beep();
+							}
 
 							// フレームを作成
 							Frame frame = converter.convert(grabbedImage);
@@ -78,7 +98,11 @@ public class VideoFileDetection extends AbstractDetection {
 							}
 
 							// フレームレートに応じて適切にウエイトを行う
-							Thread.sleep((int) (1000 / frameRate));
+							stopWatch.stop();
+							long sleepTime = (int) (1000 / frameRate) - stopWatch.getTime();
+							if (0 < sleepTime) {
+								Thread.sleep(sleepTime);
+							}
 						}
 					} catch (Exception e) {
 						e.printStackTrace();

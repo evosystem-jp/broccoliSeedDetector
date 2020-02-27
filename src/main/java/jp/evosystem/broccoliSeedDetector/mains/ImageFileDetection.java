@@ -1,5 +1,6 @@
 package jp.evosystem.broccoliSeedDetector.mains;
 
+import java.awt.Toolkit;
 import java.io.File;
 
 import javax.swing.WindowConstants;
@@ -32,7 +33,11 @@ public class ImageFileDetection extends AbstractDetection {
 		Mat targetImageMat = opencv_imgcodecs.imread(targetImagefile.getAbsolutePath());
 
 		// 画像処理
-		processTargetImage(targetImageMat, ProcessImageParameter.getDefaultParameter());
+		boolean hasNg = processTargetImage(targetImageMat, ProcessImageParameter.getDefaultParameter());
+		if (hasNg) {
+			// 警告音を鳴らす
+			Toolkit.getDefaultToolkit().beep();
+		}
 
 		// 画像を表示
 		display(targetImageMat, "タイトル");
