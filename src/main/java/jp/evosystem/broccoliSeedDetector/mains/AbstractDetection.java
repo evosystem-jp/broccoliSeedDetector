@@ -34,6 +34,10 @@ public abstract class AbstractDetection {
 		Mat targetImageMatGray = new Mat();
 		opencv_imgproc.cvtColor(targetImageMat, targetImageMatGray, opencv_imgproc.COLOR_BGR2GRAY);
 
+		// ヒストグラム平坦化
+		Mat targetImageMatEqualizeHist = new Mat();
+		opencv_imgproc.equalizeHist(targetImageMatGray,targetImageMatEqualizeHist);
+
 		// ブラー画像を作成
 		Mat targetImageMatBlur = new Mat();
 		opencv_imgproc.GaussianBlur(targetImageMatGray, targetImageMatBlur,

@@ -15,7 +15,7 @@ public interface Configurations {
 	/**
 	 * ブラーのサイズのデフォルト値(奇数).
 	 */
-	int DEFAULT_GAUSSIAN_BLUR_SIZE = 20;
+	int DEFAULT_GAUSSIAN_BLUR_SIZE = 21;
 
 	/**
 	 * Canny処理のしきい値1のデフォルト値.
