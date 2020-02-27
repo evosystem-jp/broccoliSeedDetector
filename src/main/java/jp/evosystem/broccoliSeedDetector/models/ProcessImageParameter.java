@@ -15,14 +15,34 @@ public class ProcessImageParameter {
 	public int gaussianBlueSize;
 
 	/**
-	 * Canny処理のしきい値1.
+	 * CLAHEのclipLimit.
+	 */
+	public double claheClipLimit;
+
+	/**
+	 * CLAHEのタイルサイズ.
+	 */
+	public int claheTileGridSize;
+
+	/**
+	 * エッジ抽出処理のしきい値1.
 	 */
 	public int cannyThreshold1;
 
 	/**
-	 * Canny処理のしきい値2.
+	 * エッジ抽出処理のしきい値2.
 	 */
 	public int cannyThreshold2;
+
+	/**
+	 * 膨張処理の繰り返し回数.
+	 */
+	public int dilateIterations;
+
+	/**
+	 * 収縮処理の繰り返し回数.
+	 */
+	public int erodeIterations;
 
 	/**
 	 * 輪郭の面積の最小値.
@@ -45,8 +65,12 @@ public class ProcessImageParameter {
 		if (parameter.gaussianBlueSize % 2 == 0) {
 			parameter.gaussianBlueSize++;
 		}
+		parameter.claheClipLimit = Configurations.DEFAULT_CLAHE_CLIP_LIMIT;
+		parameter.claheTileGridSize = Configurations.DEFAULT_CLAHE_TILE_GRID_SIZE;
 		parameter.cannyThreshold1 = Configurations.DEFAULT_CANNY_THRESHOLD_1;
 		parameter.cannyThreshold2 = Configurations.DEFAULT_CANNY_THRESHOLD_2;
+		parameter.dilateIterations = Configurations.DEFAULT_DILATE_ITERATIONS;
+		parameter.erodeIterations = Configurations.DEFAULT_ERODE_ITERATIONS;
 		parameter.contourAreaMinThreshold = Configurations.DEFAULT_CONTOUR_AREA_MIN_THRESHOLD;
 		parameter.contourAreaMaxThreshold = Configurations.DEFAULT_CONTOUR_AREA_MAX_THRESHOLD;
 		return parameter;

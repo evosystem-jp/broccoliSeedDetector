@@ -15,17 +15,37 @@ public interface Configurations {
 	/**
 	 * ブラーのサイズのデフォルト値(奇数).
 	 */
-	int DEFAULT_GAUSSIAN_BLUR_SIZE = 21;
+	int DEFAULT_GAUSSIAN_BLUR_SIZE = 25;
 
 	/**
-	 * Canny処理のしきい値1のデフォルト値.
+	 * CLAHEのclipLimitのデフォルト値.
+	 */
+	double DEFAULT_CLAHE_CLIP_LIMIT = 40;
+
+	/**
+	 * CLAHEのタイルサイズのデフォルト値.
+	 */
+	int DEFAULT_CLAHE_TILE_GRID_SIZE = 8;
+
+	/**
+	 * エッジ抽出処理のしきい値1のデフォルト値.
 	 */
 	int DEFAULT_CANNY_THRESHOLD_1 = 25;
 
 	/**
-	 * Canny処理のしきい値2のデフォルト値.
+	 * エッジ抽出処理のしきい値2のデフォルト値.
 	 */
 	int DEFAULT_CANNY_THRESHOLD_2 = 50;
+
+	/**
+	 * 膨張処理の繰り返し回数のデフォルト値.
+	 */
+	int DEFAULT_DILATE_ITERATIONS = 5;
+
+	/**
+	 * 収縮処理の繰り返し回数のデフォルト値.
+	 */
+	int DEFAULT_ERODE_ITERATIONS = 4;
 
 	/**
 	 * 輪郭の面積の最小値のデフォルト値.
@@ -45,7 +65,7 @@ public interface Configurations {
 	/**
 	 * 処理結果をファイルに出力するかどうか.
 	 */
-	boolean ENABLE_RECORDING = false;
+	boolean ENABLE_RECORDING = true;
 
 	/**
 	 * 対象の画像ファイルのパス.

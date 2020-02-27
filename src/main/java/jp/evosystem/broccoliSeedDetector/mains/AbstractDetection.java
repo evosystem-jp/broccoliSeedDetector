@@ -3,6 +3,7 @@ package jp.evosystem.broccoliSeedDetector.mains;
 import java.util.Arrays;
 import java.util.Random;
 
+import org.bytedeco.javacpp.indexer.UByteIndexer;
 import org.bytedeco.opencv.global.opencv_core;
 import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.Mat;
@@ -11,6 +12,7 @@ import org.bytedeco.opencv.opencv_core.Point;
 import org.bytedeco.opencv.opencv_core.Rect;
 import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
+import org.bytedeco.opencv.opencv_imgproc.CLAHE;
 
 import jp.evosystem.broccoliSeedDetector.constants.Configurations;
 import jp.evosystem.broccoliSeedDetector.models.ProcessImageParameter;
@@ -30,17 +32,33 @@ public abstract class AbstractDetection {
 	 * @param processImageParameter
 	 */
 	protected static void processTargetImage(Mat targetImageMat, ProcessImageParameter processImageParameter) {
+		// 元画像のコピーを作成
+		Mat targetImageMatClone = targetImageMat.clone();
+
 		// グレースケール画像を作成
 		Mat targetImageMatGray = new Mat();
 		opencv_imgproc.cvtColor(targetImageMat, targetImageMatGray, opencv_imgproc.COLOR_BGR2GRAY);
 
 		// ヒストグラム平坦化
+		CLAHE clahe = opencv_imgproc.createCLAHE(processImageParameter.claheClipLimit,
+				new Size(processImageParameter.claheTileGridSize, processImageParameter.claheTileGridSize));
 		Mat targetImageMatEqualizeHist = new Mat();
-		opencv_imgproc.equalizeHist(targetImageMatGray,targetImageMatEqualizeHist);
+		clahe.apply(targetImageMatGray, targetImageMatEqualizeHist);
+
+		// ガンマ補正
+		double gamma = 2.5;
+		Mat lut = new Mat(1, 256, opencv_core.CV_8U);
+		UByteIndexer lutIndexer = lut.createIndexer();
+		for (int i = 0; i < 256; i++) {
+			double lutValue = Math.pow((i / 255.0), (1.0 / gamma)) * 255;
+			lutIndexer.put(i, (int) lutValue);
+		}
+		Mat targetImageMatLut = new Mat();
+		opencv_core.LUT(targetImageMatEqualizeHist, lut, targetImageMatLut);
 
 		// ブラー画像を作成
 		Mat targetImageMatBlur = new Mat();
-		opencv_imgproc.GaussianBlur(targetImageMatGray, targetImageMatBlur,
+		opencv_imgproc.GaussianBlur(targetImageMatLut, targetImageMatBlur,
 				new Size(processImageParameter.gaussianBlueSize, processImageParameter.gaussianBlueSize), 0);
 
 		// エッジ抽出
@@ -50,11 +68,15 @@ public abstract class AbstractDetection {
 
 		// 膨張処理
 		Mat targetImageMatDilate = new Mat();
-		opencv_imgproc.dilate(targetImageMatCanny, targetImageMatDilate, new Mat());
+		opencv_imgproc.dilate(targetImageMatCanny, targetImageMatDilate, new Mat(), new Point(-1, -1),
+				processImageParameter.dilateIterations, opencv_core.BORDER_CONSTANT,
+				opencv_imgproc.morphologyDefaultBorderValue());
 
 		// 収縮処理
 		Mat targetImageMatErode = new Mat();
-		opencv_imgproc.erode(targetImageMatDilate, targetImageMatErode, new Mat());
+		opencv_imgproc.erode(targetImageMatDilate, targetImageMatErode, new Mat(), new Point(-1, -1),
+				processImageParameter.erodeIterations, opencv_core.BORDER_CONSTANT,
+				opencv_imgproc.morphologyDefaultBorderValue());
 
 		// debug
 		if (Configurations.ENABLE_DEBUG_MODE) {
@@ -115,7 +137,7 @@ public abstract class AbstractDetection {
 				opencv_imgproc.line(targetImageMat, tlbl, trbr, Scalar.GREEN);
 
 				// 判定結果を描画
-				if (checkSeedExists(targetImageMat, boundingRect)) {
+				if (checkSeedExists(targetImageMatClone, boundingRect)) {
 					opencv_imgproc.rectangle(targetImageMat, tl, new Point(tl.x() + 20, tl.y() + 20), Scalar.GREEN, -1,
 							opencv_imgproc.LINE_4, 0);
 					opencv_imgproc.putText(targetImageMat, "OK", new Point(tl.x(), tl.y() + 15),
@@ -140,7 +162,12 @@ public abstract class AbstractDetection {
 	 * @return
 	 */
 	private static boolean checkSeedExists(Mat targetImageMat, Rect boundingRect) {
+		// 矩形内の画像を抽出
+		Mat subTargetImageMat = targetImageMat.apply(boundingRect);
+
 		// TODO
-		return 1 < new Random().nextInt(20);
+
+		// FIXME
+		return 1 < new Random().nextInt(100);
 	}
 }
