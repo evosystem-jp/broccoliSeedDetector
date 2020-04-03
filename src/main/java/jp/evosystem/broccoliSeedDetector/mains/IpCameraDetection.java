@@ -10,7 +10,7 @@ import org.bytedeco.javacv.IPCameraFrameGrabber;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.opencv_core.Mat;
 
-import jp.evosystem.broccoliSeedDetector.components.ExtendedCanvsFrame;
+import jp.evosystem.broccoliSeedDetector.components.ExtendedCanvasFrame;
 import jp.evosystem.broccoliSeedDetector.constants.Configurations;
 
 /**
@@ -45,8 +45,8 @@ public class IpCameraDetection extends AbstractDetection {
 				OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
 
 				// 画面を作成
-				ExtendedCanvsFrame canvasFrame = new ExtendedCanvsFrame("タイトル",
-						ExtendedCanvsFrame.getDefaultGamma() / frameGrabber.getGamma());
+				ExtendedCanvasFrame canvasFrame = new ExtendedCanvasFrame("タイトル",
+						ExtendedCanvasFrame.getDefaultGamma() / frameGrabber.getGamma());
 
 				// 取得した映像データ
 				Mat grabbedImage;
@@ -58,7 +58,7 @@ public class IpCameraDetection extends AbstractDetection {
 				while (canvasFrame.isVisible() && (grabbedImage = converter.convert(frameGrabber.grab())) != null) {
 					try {
 						// 画像処理
-						boolean hasNg = processTargetImage(grabbedImage, canvasFrame.getCurrentParameter());
+						boolean hasNg = !processTargetImageWrapper(grabbedImage, canvasFrame.getCurrentParameter());
 						if (hasNg) {
 							ngCount++;
 						} else {

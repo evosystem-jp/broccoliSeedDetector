@@ -22,13 +22,18 @@ image = cv2.imread(img_path)
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 show_images([gray])
 
+# create a CLAHE object (Arguments are optional).
+clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+claheApplied = clahe.apply(gray)
+show_images([claheApplied])
+
 # equalizeHist
-equalizeHist = cv2.equalizeHist(gray)
-show_images([equalizeHist])
+#equalizeHist = cv2.equalizeHist(gray)
+#show_images([equalizeHist])
 
 # blur
-BLUR_SIZE = 21
-blur = cv2.GaussianBlur(equalizeHist, (BLUR_SIZE, BLUR_SIZE), 0)
+BLUR_SIZE = 25
+blur = cv2.GaussianBlur(claheApplied, (BLUR_SIZE, BLUR_SIZE), 0)
 show_images([blur])
 
 # canny
@@ -38,11 +43,11 @@ canny = cv2.Canny(blur, CANNY_THRESHOLD_1, CANNY_THRESHOLD_2)
 show_images([canny])
 
 # dilate
-dilate = cv2.dilate(canny, None, iterations=1)
+dilate = cv2.dilate(canny, None, iterations=5)
 show_images([dilate])
 
 # erode
-erode = cv2.erode(dilate, None, iterations=1)
+erode = cv2.erode(dilate, None, iterations=5)
 show_images([erode])
 
 # Find contours

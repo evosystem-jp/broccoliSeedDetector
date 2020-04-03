@@ -33,7 +33,7 @@ public class ImageFileDetection extends AbstractDetection {
 		Mat targetImageMat = opencv_imgcodecs.imread(targetImagefile.getAbsolutePath());
 
 		// 画像処理
-		boolean hasNg = processTargetImage(targetImageMat, ProcessImageParameter.getDefaultParameter());
+		boolean hasNg = processTargetImageWrapper(targetImageMat, ProcessImageParameter.getDefaultParameter());
 		if (hasNg) {
 			// 警告音を鳴らす
 			Toolkit.getDefaultToolkit().beep();

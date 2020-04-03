@@ -19,7 +19,7 @@ import jp.evosystem.broccoliSeedDetector.models.ProcessImageParameter;
  *
  * @author evosystem
  */
-public class ExtendedCanvsFrame extends CanvasFrame {
+public class ExtendedCanvasFrame extends CanvasFrame {
 
 	/**
 	 * ブラーのサイズ.
@@ -29,42 +29,42 @@ public class ExtendedCanvsFrame extends CanvasFrame {
 	/**
 	 * CLAHEのclipLimit.
 	 */
-	public JSlider claheClipLimitSlider;
+	private JSlider claheClipLimitSlider;
 
 	/**
 	 * CLAHEのタイルサイズ.
 	 */
-	public JSlider claheTileGridSizeSlider;
+	private JSlider claheTileGridSizeSlider;
 
 	/**
 	 * エッジ抽出処理のしきい値1.
 	 */
-	public JSlider cannyThreshold1Slider;
+	private JSlider cannyThreshold1Slider;
 
 	/**
 	 * エッジ抽出処理のしきい値2.
 	 */
-	public JSlider cannyThreshold2Slider;
+	private JSlider cannyThreshold2Slider;
 
 	/**
 	 * 膨張処理の繰り返し回数.
 	 */
-	public JSlider dilateIterationsSlider;
+	private JSlider dilateIterationsSlider;
 
 	/**
 	 * 収縮処理の繰り返し回数.
 	 */
-	public JSlider erodeIterationsSlider;
+	private JSlider erodeIterationsSlider;
 
 	/**
 	 * 輪郭の面積の最小値.
 	 */
-	public JSlider contourAreaMinThresholdSlider;
+	private JSlider contourAreaMinThresholdSlider;
 
 	/**
 	 * 輪郭の面積の最小値.
 	 */
-	public JSlider contourAreaMaxThresholdSlider;
+	private JSlider contourAreaMaxThresholdSlider;
 
 	/**
 	 * コンストラクタ.
@@ -72,7 +72,7 @@ public class ExtendedCanvsFrame extends CanvasFrame {
 	 * @param title
 	 * @param gamma
 	 */
-	public ExtendedCanvsFrame(String title, double gamma) {
+	public ExtendedCanvasFrame(String title, double gamma) {
 		super(title, gamma);
 	}
 
@@ -206,7 +206,8 @@ public class ExtendedCanvsFrame extends CanvasFrame {
 
 		// 左から右へレイアウトするパネルを作成
 		JPanel contourAreaMinThresholdLineAxisPanel = new JPanel();
-		contourAreaMinThresholdLineAxisPanel.setLayout(new BoxLayout(contourAreaMinThresholdLineAxisPanel, BoxLayout.LINE_AXIS));
+		contourAreaMinThresholdLineAxisPanel
+				.setLayout(new BoxLayout(contourAreaMinThresholdLineAxisPanel, BoxLayout.LINE_AXIS));
 		pageAxisPanel.add(contourAreaMinThresholdLineAxisPanel);
 
 		// コンポーネントを追加
@@ -215,7 +216,8 @@ public class ExtendedCanvsFrame extends CanvasFrame {
 
 		// 左から右へレイアウトするパネルを作成
 		JPanel contourAreaMaxThresholdLineAxisPanel = new JPanel();
-		contourAreaMaxThresholdLineAxisPanel.setLayout(new BoxLayout(contourAreaMaxThresholdLineAxisPanel, BoxLayout.LINE_AXIS));
+		contourAreaMaxThresholdLineAxisPanel
+				.setLayout(new BoxLayout(contourAreaMaxThresholdLineAxisPanel, BoxLayout.LINE_AXIS));
 		pageAxisPanel.add(contourAreaMaxThresholdLineAxisPanel);
 
 		// コンポーネントを追加

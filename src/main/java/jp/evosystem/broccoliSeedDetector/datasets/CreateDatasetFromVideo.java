@@ -20,7 +20,7 @@ import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
 import org.bytedeco.opencv.opencv_imgproc.CLAHE;
 
-import jp.evosystem.broccoliSeedDetector.components.ExtendedCanvsFrame;
+import jp.evosystem.broccoliSeedDetector.components.ExtendedCanvasFrame;
 import jp.evosystem.broccoliSeedDetector.constants.Configurations;
 import jp.evosystem.broccoliSeedDetector.models.ProcessImageParameter;
 
@@ -53,8 +53,8 @@ public class CreateDatasetFromVideo {
 			OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
 
 			// 画面を作成
-			ExtendedCanvsFrame canvasFrame = new ExtendedCanvsFrame("タイトル",
-					ExtendedCanvsFrame.getDefaultGamma() / frameGrabber.getGamma());
+			ExtendedCanvasFrame canvasFrame = new ExtendedCanvasFrame("タイトル",
+					ExtendedCanvasFrame.getDefaultGamma() / frameGrabber.getGamma());
 
 			// 取得した映像データ
 			Mat grabbedImage;
